@@ -530,6 +530,14 @@ class Manager
      **/
     std::shared_ptr<vk::Instance> getVkInstance() const;
 
+    /**
+     * The current Vulkan logical device.
+     *
+     * @return a shared pointer to the current Vulkan logical device held by this
+     * object
+     **/
+    std::shared_ptr<vk::Device> getDevice() const { return mDevice; }
+
   private:
     // -------------- OPTIONALLY OWNED RESOURCES
     std::shared_ptr<vk::Instance> mInstance = nullptr;
