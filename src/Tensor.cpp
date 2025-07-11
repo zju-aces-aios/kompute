@@ -2,6 +2,11 @@
 
 #include "kompute/Tensor.hpp"
 #include "kompute/Image.hpp"
+#include <android/log.h>
+#include <typeinfo>
+
+#define LOG_TAG "KomputeTensor"
+#define LOGI(...) __android_log_print(ANDROID_LOG_INFO, LOG_TAG, __VA_ARGS__)
 
 namespace kp {
 
@@ -370,6 +375,38 @@ void
 Tensor::createBuffer(std::shared_ptr<vk::Buffer> buffer,
                      vk::BufferUsageFlags bufferUsageFlags)
 {
+    // ======================= ADDED CRASH DIAGNOSTIC =======================
+    LOGI("Tensor::createBuffer: Checking internal mDevice state before use.");
+    if (!this->mDevice) {
+        LOGI("Tensor::createBuffer: FATAL - this->mDevice is a nullptr. Aborting.");
+        // Throwing an exception is better than letting it crash
+        throw std::runtime_error("Tensor::createBuffer: mDevice is null");
+    }
+
+    VkDevice rawDeviceHandle = static_cast<VkDevice>(*this->mDevice);
+    if (rawDeviceHandle == VK_NULL_HANDLE) {
+        LOGI("Tensor::createBuffer: FATAL - The underlying VkDevice handle is VK_NULL_HANDLE. Aborting.");
+        throw std::runtime_error("Tensor::createBuffer: raw VkDevice handle is null");
+    }
+    
+    LOGI("Tensor::createBuffer: mDevice is valid (handle: %p).", rawDeviceHandle);
+
+    try {
+        auto vkCreateBufferPtr = this->mDevice->getProcAddr("vkCreateBuffer");
+        if (!vkCreateBufferPtr) {
+            LOGI("Tensor::createBuffer: FATAL - getProcAddr(\"vkCreateBuffer\") returned a null pointer.");
+            throw std::runtime_error("getProcAddr for vkCreateBuffer failed");
+        }
+        LOGI("Tensor::createBuffer: vkCreateBuffer function pointer is valid (address: %p).", vkCreateBufferPtr);
+    } catch (const std::exception& e) {
+        LOGI("Tensor::createBuffer: EXCEPTION caught while calling getProcAddr: %s", e.what());
+        throw;
+    } catch (...) {
+        LOGI("Tensor::createBuffer: UNKNOWN EXCEPTION caught while calling getProcAddr.");
+        throw;
+    }
+    // ======================= END OF DIAGNOSTIC =======================
+
 
     vk::DeviceSize bufferSize = this->memorySize();
 
@@ -389,7 +426,9 @@ Tensor::createBuffer(std::shared_ptr<vk::Buffer> buffer,
                                     bufferUsageFlags,
                                     vk::SharingMode::eExclusive);
 
+    LOGI("Tensor::createBuffer: About to call this->mDevice->createBuffer.");
     this->mDevice->createBuffer(&bufferInfo, nullptr, buffer.get());
+    LOGI("Tensor::createBuffer: Successfully called this->mDevice->createBuffer.");
 }
 
 void
