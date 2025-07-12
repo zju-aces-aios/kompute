@@ -133,6 +133,7 @@ endif()
 # We don't import Vulkan library if Android build as it is built dynamically
 # Otherwise it is expected that the Vulkan SDK and dependencies are installed
 # Has to happen AFTER using the build-in Vulkan headers to prevent multiple targets with the name Vulkan::Headers
+message(STATUS "KOMPUTE_OPT_ANDROID_BUILD: ${KOMPUTE_OPT_ANDROID_BUILD}")
 if(KOMPUTE_OPT_ANDROID_BUILD)
     add_library(vulkanAndroid INTERFACE)
     if(NOT DEFINED VULKAN_INCLUDE_DIR)
