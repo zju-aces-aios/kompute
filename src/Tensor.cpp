@@ -409,6 +409,14 @@ Tensor::createBuffer(std::shared_ptr<vk::Buffer> buffer,
                                     bufferUsageFlags,
                                     vk::SharingMode::eExclusive);
 
+    // check if the buffer is null before creating it
+    if ( mDevice == nullptr || 
+         buffer == nullptr
+    ) {
+        LOGI("Tensor::createBuffer: FATAL - mDevice or buffer is null. Aborting.");
+        throw std::runtime_error("Tensor::createBuffer: mDevice or buffer is null");
+    }
+
     LOGI("Tensor::createBuffer: About to call this->mDevice->createBuffer.");
     this->mDevice->createBuffer(&bufferInfo, nullptr, buffer.get());
     LOGI("Tensor::createBuffer: Successfully called this->mDevice->createBuffer.");
