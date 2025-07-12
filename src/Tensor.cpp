@@ -391,23 +391,6 @@ Tensor::createBuffer(std::shared_ptr<vk::Buffer> buffer,
     
     LOGI("Tensor::createBuffer: mDevice is valid (handle: %p).", (void*)rawDeviceHandle);
 
-    try {
-        auto vkCreateBufferPtr = this->mDevice->getProcAddr("vkCreateBuffer");
-        if (!vkCreateBufferPtr) {
-            LOGI("Tensor::createBuffer: FATAL - getProcAddr(\"vkCreateBuffer\") returned a null pointer.");
-            throw std::runtime_error("getProcAddr for vkCreateBuffer failed");
-        }
-        LOGI("Tensor::createBuffer: vkCreateBuffer function pointer is valid (address: %p).", (void*)vkCreateBufferPtr);
-    } catch (const std::exception& e) {
-        LOGI("Tensor::createBuffer: EXCEPTION caught while calling getProcAddr: %s", e.what());
-        throw;
-    } catch (...) {
-        LOGI("Tensor::createBuffer: UNKNOWN EXCEPTION caught while calling getProcAddr.");
-        throw;
-    }
-    // ======================= END OF DIAGNOSTIC =======================
-
-
     vk::DeviceSize bufferSize = this->memorySize();
 
     if (bufferSize < 1) {
