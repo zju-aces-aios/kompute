@@ -95,7 +95,7 @@ kompute_option(KOMPUTE_OPT_INSTALL "Enable if you want to enable installation." 
 
 # Build options
 kompute_option(KOMPUTE_OPT_BUILD_PYTHON "Enable if you want to build python bindings." OFF)
-kompute_log_level(KOMPUTE_OPT_LOG_LEVEL "Internally we use Spdlog or fmt for logging, depending on the value of 'KOMPUTE_OPT_USE_SPDLOG'. The log level used can be changed here. Possible values: 'Trace', 'Debug', 'Info', 'Warn', 'Error', 'Critical', 'Off', 'Default'. If set to 'Off' logging will be deactivated completely. If set to 'Default', the log level will be set to 'Info' for release builds and 'Debug' else." "Debug")
+kompute_log_level(KOMPUTE_OPT_LOG_LEVEL "Internally we use Spdlog or fmt for logging, depending on the value of 'KOMPUTE_OPT_USE_SPDLOG'. The log level used can be changed here. Possible values: 'Trace', 'Debug', 'Info', 'Warn', 'Error', 'Critical', 'Off', 'Default'. If set to 'Off' logging will be deactivated completely. If set to 'Default', the log level will be set to 'Info' for release builds and 'Debug' else." "Off")
 kompute_option(KOMPUTE_OPT_USE_SPDLOG "If enabled, logging via KP_LOG_<DEBUG, INFO, etc...> will happen through Spdlog instead of plan fmt." OFF)
 kompute_option(KOMPUTE_OPT_ANDROID_BUILD "Enable android compilation flags required." OFF)
 kompute_option(KOMPUTE_OPT_DISABLE_VK_DEBUG_LAYERS "Explicitly disable debug layers even on debug." OFF)
